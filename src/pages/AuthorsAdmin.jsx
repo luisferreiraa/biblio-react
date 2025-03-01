@@ -1,126 +1,15 @@
-import {useAuth} from '../context/AuthContext.jsx';
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import {useAuthors} from "../hooks/useAuthors.jsx";
 
 const AuthorsAdmin = () => {
-    const {user} = useAuth(); // Acessa o estado do usuário
-    const [authors, setAuthors] = useState([]); // Inicializa como array
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { authors, error, loading, removeAuthor, createAuthor, addingAuthor } = useAuthors();
     const [newAuthorName, setNewAuthorName] = useState("");
-    const [addingAuthor, setAddingAuthor] = useState(false);
-
-    useEffect(() => {
-        const fetchAuthors = async () => {
-            const token = localStorage.getItem("token"); // Obtém o token do localStorage
-
-            if (!token) {
-                setError("Token não encontrado. Faça login novamente.");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const response = await fetch("http://localhost:9090/api/authors/", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`, // Inclui o token JWT
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erro ${response.status}: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                console.log(data); // Verifique a resposta da API
-
-                if (Array.isArray(data.content)) {
-                    setAuthors(data.content); // Acessa o array dentro de 'content'
-                } else {
-                    throw new Error("Dados inválidos recebidos da API");
-                }
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAuthors();
-    }, [user]); // Use `user` para monitorar mudanças
 
     const handleAddAuthor = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem("token");
-
-        if (!newAuthorName.trim()) {
-            setError("O nome do autor não pode estar vazio.");
-            return;
-        }
-
-        if (!token) {
-            setError("Token não encontrado. Faça login novamente.");
-            return;
-        }
-
-        setAddingAuthor(true);
-
-        try {
-            const response = await fetch("http://localhost:9090/api/authors/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                body: JSON.stringify({name: newAuthorName}),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro ${response.status}: ${response.statusText}`);
-            }
-
-            const newAuthor = await response.json();
-
-            setAuthors((prevAuthors) => [...prevAuthors, newAuthor]);
-
-            setNewAuthorName("");
-            setError(null);
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setAddingAuthor(false);
-        }
-    }
-
-    const handleDeleteAuthor = async (authorId) => {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            setError("Token não encontrado. Faça login novamente.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:9090/api/authors/${authorId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro ${response.status}: ${response.statusText}`);
-            }
-
-            // Remove o autor da lista após a exclusão
-            setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
-            setError(null);
-        } catch (error) {
-            setError(error.message);
-        }
-    }
+        await createAuthor(newAuthorName);
+        setNewAuthorName("");
+    };
 
     if (loading) return <p>A carregar...</p>;
     if (error) return <p>Erro: {error}</p>;
@@ -161,7 +50,7 @@ const AuthorsAdmin = () => {
                                 <td className="py-2 px-4">{author.name}</td>
                                 <td className="py-2 px-4">
                                     <button
-                                        onClick={() => handleDeleteAuthor(author.id)}
+                                        onClick={() => removeAuthor(author.id)}
                                         className="text-red-500 hover:text-red-700"
                                     >
                                         Excluir
