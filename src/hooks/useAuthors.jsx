@@ -55,5 +55,4 @@ export const useAuthors = () => {
     };
 
     return { authors, error, loading, removeAuthor, createAuthor, addingAuthor, reload: loadAuthors };
-
 }

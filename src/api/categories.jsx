@@ -1,6 +1,6 @@
-const API_URL = 'http://localhost:9090/api/publishers/';
+const API_URL = 'http://localhost:9090/api/categories/';
 
-export const fetchPublishers = async () => {
+export const fetchCategories = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -23,18 +23,17 @@ export const fetchPublishers = async () => {
 
         return await response.json();
     } catch (error) {
-        console.error("Erro ao buscar editoras: ", error);
+        console.error("Erro ao buscar categorias: ", error);
         throw error;
     }
 };
 
-export const addPublisher = async (name) => {
+export const addCategory = async (name) => {
     const token = localStorage.getItem('token');
     if (!token) {
         console.error("Token não encontrado. Faça login novamente.");
         return;
     }
-
     const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -47,15 +46,15 @@ export const addPublisher = async (name) => {
     return await response.json();
 };
 
-export const deletePublisher = async (publisherId) => {
+export const deleteCategory = async (categoryId) => {
     const token = localStorage.getItem('token');
     if (!token) {
-        console.error("Token não encontrado. Faça login novamente.")
+        console.error("Token não encontrado. Faça login novamente.");
         return;
     }
 
     try {
-        const response = await fetch(`${API_URL}${publisherId}`, {
+        const response = await fetch(`${API_URL}${categoryId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -68,7 +67,7 @@ export const deletePublisher = async (publisherId) => {
 
         return true;
     } catch (error) {
-        console.error("Erro ao buscar editoras: ", error);
+        console.error("Erro ao buscar categorias: ", error);
         throw error;
     }
 };
