@@ -28,6 +28,31 @@ export const fetchUsers = async () => {
     }
 };
 
+export const addUser = async (username, password, role) => {
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        console.error("Token não encontrado. Faça login novamente.")
+        return;
+    }
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ username: username, password: password, role: role }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+};
+
 export const deleteUser = async (userId) => {
     const token = localStorage.getItem('token');
     if (!token) {
