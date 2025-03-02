@@ -7,6 +7,7 @@ import AdminPanel from "./pages/AdminPanel.jsx";
 import AuthorsAdmin from "./pages/AuthorsAdmin.jsx";
 import PublishersAdmin from "./pages/PublishersAdmin.jsx";
 import CategoriesAdmin from "./pages/CategoriesAdmin.jsx";
+import UsersAdmin from "./pages/UsersAdmin.jsx";
 
 function Unauthorized() {
     return <h1>Acesso não autorizado</h1>;
@@ -26,6 +27,7 @@ function App() {
             {/* Área de administração - apenas ADMIN pode acessar */}
             <Route element={<PrivateRoute allowedRoles={["ADMIN"]} />}>
                 <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/users" element={<UsersAdmin />} />
                 <Route path="/authors" element={<AuthorsAdmin />} />
                 <Route path="/publishers" element={<PublishersAdmin />} />
                 <Route path="/categories" element={<CategoriesAdmin />} />
