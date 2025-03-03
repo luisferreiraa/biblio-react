@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:9090/books/";
+const API_URL = "http://localhost:9090/api/books/";
 
 export const fetchBooks = async () => {
     const token = localStorage.getItem("token");
@@ -27,11 +27,36 @@ export const fetchBooks = async () => {
     }
 };
 
+export const addBook = async (title) => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        console.error("Token não encontrado. Faça login novamente.");
+        return;
+    }
+
+    const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+    },
+        body: JSON.stringify({ title: title }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+};
+
 export const deleteBook = async (bookId) => {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`${API_URL}${authorId}`, {
+        const response = await fetch(`${API_URL}${bookId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,

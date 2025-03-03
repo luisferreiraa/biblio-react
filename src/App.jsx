@@ -9,6 +9,7 @@ import PublishersAdmin from "./pages/PublishersAdmin.jsx";
 import CategoriesAdmin from "./pages/CategoriesAdmin.jsx";
 import UsersAdmin from "./pages/UsersAdmin.jsx";
 import NavbarAdmin from "./pages/NavbarAdmin.jsx";
+import BooksAdmin from "./pages/BooksAdmin.jsx";
 import { useAuth } from "./context/AuthContext";
 import {ClipLoader} from "react-spinners";
 
@@ -45,6 +46,7 @@ function App() {
                 <Route element={<PrivateRoute allowedRoles={["ADMIN"]} />}>
                     <Route path="/admin" element={<AdminPanel />} />
                     <Route path="/users" element={<UsersAdmin />} />
+                    <Route path="/books" element={<BooksAdmin />} />
                     <Route path="/authors" element={<AuthorsAdmin />} />
                     <Route path="/publishers" element={<PublishersAdmin />} />
                     <Route path="/categories" element={<CategoriesAdmin />} />
