@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {useAuthors} from "../hooks/useAuthors.jsx";
+import LoadingSpinner from "./LoadingSpinner.jsx";
 
 const AuthorsAdmin = () => {
     const { authors, error, loading, removeAuthor, createAuthor, addingAuthor } = useAuthors();
@@ -13,7 +14,10 @@ const AuthorsAdmin = () => {
         setIsModalOpen(false);
     };
 
-    if (loading) return <p>A carregar...</p>;
+    if (loading) {
+        return <LoadingSpinner />; // 👈 Usa o componente reutilizável
+    }
+
     if (error) return <p>Erro: {error}</p>;
 
     return (

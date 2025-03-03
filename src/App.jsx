@@ -10,18 +10,27 @@ import CategoriesAdmin from "./pages/CategoriesAdmin.jsx";
 import UsersAdmin from "./pages/UsersAdmin.jsx";
 import NavbarAdmin from "./pages/NavbarAdmin.jsx";
 import { useAuth } from "./context/AuthContext";
+import {ClipLoader} from "react-spinners";
 
 function Unauthorized() {
     return <h1>Acesso não autorizado</h1>;
 }
 
 function App() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <ClipLoader color="#3498db" size={50}/>
+            </div>
+        );
+    }
 
     return (
         <>
-            {/* ✅ Navbar ADMIN apenas se o user for ADMIN */}
-            {user && user.role === "ADMIN" && <NavbarAdmin />}
+            {/* ✅ Navbar ADMIN apenas se o user for ADMIN e não estiver na página de login */}
+            {user?.role === "ADMIN" && location.pathname !== "/login" && <NavbarAdmin />}
 
             <Routes>
                 <Route path="/login" element={<Login />} />

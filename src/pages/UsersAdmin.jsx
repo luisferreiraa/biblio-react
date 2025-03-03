@@ -2,6 +2,7 @@
 import {useUsers} from "../hooks/useUsers.jsx";
 import {useState} from "react";
 import {ClipLoader} from "react-spinners";
+import LoadingSpinner from "./LoadingSpinner.jsx";
 
 const UsersAdmin = () => {
     const {users, error, loading, removeUser, createUser, addingUser} = useUsers();
@@ -24,12 +25,9 @@ const UsersAdmin = () => {
         setIsModalOpen(false);
     }
 
-    if (loading)
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <ClipLoader color="#3498db" size={50} />
-            </div>
-        );
+    if (loading) {
+        return <LoadingSpinner />; // 👈 Usa o componente reutilizável
+    }
 
     if (error) return <p>Erro: {error}</p>;
 

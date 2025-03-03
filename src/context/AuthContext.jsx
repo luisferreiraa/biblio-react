@@ -6,15 +6,41 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true); // Indica se a aplicação está carregando
 
-    // Ao carregar a aplicação, verifique se o token já está presente
+    // // Ao carregar a aplicação, verifique se o token já está presente
+    // useEffect(() => {
+    //     const token = localStorage.getItem("token");
+    //     if (token) {
+    //         const decodedUser = JSON.parse(localStorage.getItem("user"));
+    //         setUser(decodedUser); // Armazenar o usuário no estado
+    //     }
+    //     setLoading(false); // Termina o loading após verificar o token
+    // }, []);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) {
-            const decodedUser = JSON.parse(localStorage.getItem("user"));
-            setUser(decodedUser); // Armazenar o usuário no estado
+        const storedUser = localStorage.getItem("user");
+
+        if (token && storedUser) {
+            try {
+                const parsedUser = JSON.parse(storedUser);
+                if (parsedUser?.role) {
+                    setUser(parsedUser);
+                } else {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    setUser(null);
+                }
+            } catch (error) {
+                console.error("Erro ao processar o usuário do localStorage:", error);
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                setUser(null);
+            }
         }
-        setLoading(false); // Termina o loading após verificar o token
+        setLoading(false);
     }, []);
+
+
 
     const login = (userData, token) => {
         if (!userData.role) {

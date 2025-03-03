@@ -1,5 +1,6 @@
 import { useAuth } from "../context/AuthContext"; // Importa o contexto de autenticação
 import { Link } from "react-router-dom";
+import React from "react";
 
 const NavbarAdmin = () => {
     const { user } = useAuth();     // Obtém o utilizador do contexto

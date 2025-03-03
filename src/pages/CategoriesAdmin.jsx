@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {useCategories} from "../hooks/useCategories.jsx";
+import LoadingSpinner from "./LoadingSpinner.jsx";
 
 const CategoriesAdmin = () => {
     const { categories, error, loading, removeCategory, createCategory, addingCategory } = useCategories();
@@ -13,7 +14,10 @@ const CategoriesAdmin = () => {
         setIsModalOpen(false);
     };
 
-    if (loading) return <p>A carregar...</p>;
+    if (loading) {
+        return <LoadingSpinner />; // 👈 Usa o componente reutilizável
+    }
+
     if (error) return <p>Erro: {error}</p>;
 
     return (

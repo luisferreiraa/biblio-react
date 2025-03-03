@@ -1,17 +1,20 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../context/AuthContext.jsx";
-import {jwtDecode} from "jwt-decode"; // Importa corretamente sem chaves {}
+import {jwtDecode} from "jwt-decode";
+import LoadingSpinner from "./LoadingSpinner.jsx"; // Importa corretamente sem chaves {}
 
 const Login = () => {
     const {login} = useAuth();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({username: "", password: ""});
     const [error, setError] = useState(""); // Estado para erros
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError(""); // Reseta erro antes de tentar login
+        setLoading(true);
 
         try {
             const response = await fetch("http://localhost:9090/api/auth/login", {
@@ -47,8 +50,14 @@ const Login = () => {
         } catch (error) {
             console.error("Erro ao fazer login:", error);
             setError("Utilizador ou password incorretos"); // Define mensagem de erro para UI
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <LoadingSpinner />; // Exibe o spinner enquanto faz login
+    }
 
     return (
         <div className="bg-gray-900">

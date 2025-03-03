@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {usePublishers} from "../hooks/usePublishers.jsx";
+import LoadingSpinner from "./LoadingSpinner.jsx";
 
 const PublishersAdmin = () => {
     const {publishers, error, loading, removePublisher, createPublisher, addingPublisher} = usePublishers();
@@ -13,7 +14,10 @@ const PublishersAdmin = () => {
         setIsModalOpen(false);
     };
 
-    if (loading) return <p>A carregar...</p>;
+    if (loading) {
+        return <LoadingSpinner />; // 👈 Usa o componente reutilizável
+    }
+
     if (error) return <p>Erro: {error}</p>;
 
     return (
