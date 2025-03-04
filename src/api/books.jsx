@@ -27,7 +27,7 @@ export const fetchBooks = async () => {
     }
 };
 
-export const addBook = async (title) => {
+export const addBook = async (title, authorsId, publisherId, categoriesId) => {
 
     const token = localStorage.getItem("token");
 
@@ -41,8 +41,14 @@ export const addBook = async (title) => {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
-    },
-        body: JSON.stringify({ title: title }),
+        },
+        body: JSON.stringify(
+            {
+                title: title,
+                authorsId: authorsId,
+                publisherId: publisherId,
+                categoriesId: categoriesId
+            }),
     });
 
     if (!response.ok) {

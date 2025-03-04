@@ -36,16 +36,31 @@ export const useBooks = () => {
         }
     };
 
-    const createBook = async (title) => {
+    const createBook = async (title, authorsId, publisherId, categoriesId) => {
         if (!title.trim()) {
             setError("O título do livro não pode estar vazio.");
+            return;
+        }
+
+        if (!authorsId.length) {
+            setError("Pelo menos um autor deve ser selecionado.")
+            return;
+        }
+
+        if (!publisherId) {
+            setError("A editora deve ser selecionada.");
+            return;
+        }
+
+        if (!categoriesId.length) {
+            setError("Pelo menos uma categoria deve ser selecionada.")
             return;
         }
 
         setAddingBook(true);
 
         try {
-            const newBook = await addBook(title, user.token);
+            const newBook = await addBook(title, authorsId, publisherId, categoriesId, user.token);
             setBooks((prev) => [...prev, newBook]);
         } catch (err) {
             setError(err.message);

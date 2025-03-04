@@ -1,21 +1,37 @@
 import {useState} from "react";
 import {useBooks} from "../hooks/useBooks.jsx";
+import {useAuthors} from "../hooks/useAuthors.jsx";
+import {usePublishers} from "../hooks/usePublishers.jsx";
+import {useCategories} from "../hooks/useCategories.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
 
 const BooksAdmin = () => {
-    const { books, error, loading, removeBook, createBook, addingBook } = useBooks();
+    const {books, error, loading, removeBook, createBook, addingBook} = useBooks();
+    const {authors} = useAuthors();
+    const {publishers} = usePublishers();
+    const {categories} = useCategories();
+
     const [newBookTitle, setNewBookTitle] = useState("");
+    const [selectedAuthors, setSelectedAuthors] = useState([]);
+    const [selectedPublisher, setSelectedPublisher] = useState("");
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleAddBook = async (e) => {
         e.preventDefault();
-        await createBook(newBookTitle);
+
+        await createBook(newBookTitle, selectedAuthors, selectedPublisher, selectedCategories);
+
+        // Reset dos campos
         setNewBookTitle("");
+        setSelectedAuthors([]);
+        setSelectedPublisher("");
+        setSelectedCategories([]);
         setIsModalOpen(false);
     }
 
     if (loading) {
-        return <LoadingSpinner />;
+        return <LoadingSpinner/>;
     }
 
     if (error) {
@@ -52,12 +68,62 @@ const BooksAdmin = () => {
                             <form onSubmit={handleAddBook} className="flex flex-col">
                                 <input
                                     type="text"
-                                    placeholder="Nome do autor"
+                                    placeholder="Titulo"
                                     value={newBookTitle}
                                     onChange={(e) => setNewBookTitle(e.target.value)}
                                     className="bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mb-3 w-full"
                                     required
                                 />
+
+                                {/* Dropdown de Autores (Múltiplos) */}
+                                <select
+                                    multiple
+                                    value={selectedAuthors}
+                                    onChange={(e) =>
+                                        setSelectedAuthors([...e.target.selectedOptions].map(option => Number(option.value)))
+                                    }
+                                    className="bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mb-3 w-full custom-scrollbar"
+                                    required
+                                >
+                                    {authors.map((author) => (
+                                        <option key={author.id} value={author.id}>
+                                            {author.name}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                {/*Dropdown de Editora*/}
+                                <select
+                                    value={selectedPublisher}
+                                    onChange={(e) => setSelectedPublisher(Number(e.target.value))}
+                                    className="bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mb-3 w-full"
+                                    required
+                                >
+                                    <option value="">Selecione uma Editora</option>
+                                    {publishers.map((publisher) => (
+                                        <option key={publisher.id} value={publisher.id}>
+                                            {publisher.name}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                {/* Dropdown de Categorias (Múltiplos) */}
+                                <select
+                                    multiple
+                                    value={selectedCategories}
+                                    onChange={(e) =>
+                                        setSelectedCategories([...e.target.selectedOptions].map(option => Number(option.value)))
+                                    }
+                                    className="bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mb-3 w-full custom-scrollbar"
+                                    required
+                                >
+                                    {categories.map((category) => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </select>
+
                                 {/* Botão Salvar com largura total do input */}
                                 <button
                                     type="submit"
