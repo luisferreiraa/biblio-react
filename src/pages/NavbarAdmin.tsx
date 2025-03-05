@@ -1,14 +1,14 @@
-import {useAuth} from "../context/AuthContext"; // Importa o contexto de autenticação
+import {useAuth} from "../context/AuthContext.tsx";
 import {Link, useLocation} from "react-router-dom";
 import React from "react";
 
-const NavbarAdmin = () => {
+const NavbarAdmin: React.FC = () => {
     const {user} = useAuth();     // Obtém o utilizador do contexto
     const location = useLocation();     // Obtém a URL atual
 
     if (!user || user.role !== "ADMIN") return null;        // Só exibe se for ADMIN
 
-    const navLinks = [
+    const navLinks: { path: string; label: string  }[] = [
         {path: "/admin", label: "Dashboard" },
         {path: "/users", label: "Utilizadores"},
         {path: "/books", label: "Livros"},

@@ -1,13 +1,14 @@
-import {useState} from "react";
-import {useCategories} from "../hooks/useCategories.jsx";
+import {FormEvent, useState} from "react";
+import {useCategories} from "../hooks/useCategories.ts";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import {Category} from "../interfaces/category.ts";
 
 const CategoriesAdmin = () => {
     const { categories, error, loading, removeCategory, createCategory, addingCategory } = useCategories();
-    const [newCategoryName, setNewCategoryName] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const handleAddCategory = async (e) => {
+    const handleAddCategory = async (e: FormEvent) => {
         e.preventDefault();
         await createCategory(newCategoryName);
         setNewCategoryName("");
@@ -79,7 +80,7 @@ const CategoriesAdmin = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {categories.map((category) => (
+                        {categories.map((category: Category) => (
                             <tr key={category.id} className="border-gray-700 hover:bg-gray-700">
                                 <td className="py-2 px-4">{category.name}</td>
                                 <td className="py-2 px-4">

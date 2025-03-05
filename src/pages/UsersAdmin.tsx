@@ -1,22 +1,21 @@
-// import {useState} from "react";
-import {useUsers} from "../hooks/useUsers.jsx";
-import {useState} from "react";
-import {ClipLoader} from "react-spinners";
+import {useUsers} from "../hooks/useUsers.ts";
+import React, {FormEvent, useState} from "react";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import {User} from "../interfaces/user.ts";
 
-const UsersAdmin = () => {
+const UsersAdmin: React.FC = () => {
     const {users, error, loading, removeUser, createUser, addingUser} = useUsers();
-    const [newUsername, setNewUsername] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [newRole, setNewRole] = useState("USER");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newUsername, setNewUsername] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
+    const [newRole, setNewRole] = useState<"ADMIN" | "USER">("USER");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     const roles = [
         {value: "ADMIN", label: "Administrador"},
         {value: "USER", label: "Utilizador"},
     ];
 
-    const handleAddUser = async (e) => {
+    const handleAddUser = async (e: FormEvent) => {
         e.preventDefault();
         await createUser(newUsername, newPassword, newRole);
         setNewUsername("");
@@ -75,7 +74,7 @@ const UsersAdmin = () => {
                                 />
                                 <select
                                     value={newRole}
-                                    onChange={(e) => setNewRole(e.target.value)}
+                                    onChange={(e) => setNewRole(e.target.value as "ADMIN" | "USER")}
                                     className="mb-3 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2 me-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 >
                                     {roles.map((r) => (
@@ -107,7 +106,7 @@ const UsersAdmin = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {users.map((user) => (
+                        {users.map((user: User) => (
                             <tr key={user.id} className="border-gray-700 hover:bg-gray-700">
                                 <td className="py-2 px-4">{user.username}</td>
                                 <td className="py-2 px-4">

@@ -1,16 +1,16 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import Login from "./pages/Login.jsx";
-import PrivateRoute from "./routes/PrivateRoute.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import AdminPanel from "./pages/AdminPanel.jsx";
-import AuthorsAdmin from "./pages/AuthorsAdmin.jsx";
-import PublishersAdmin from "./pages/PublishersAdmin.jsx";
-import CategoriesAdmin from "./pages/CategoriesAdmin.jsx";
-import UsersAdmin from "./pages/UsersAdmin.jsx";
-import NavbarAdmin from "./pages/NavbarAdmin.jsx";
+import Login from "./pages/Login.tsx";
+import PrivateRoute from "./routes/PrivateRoute.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import AdminPanel from "./pages/AdminPanel.tsx";
+import AuthorsAdmin from "./pages/AuthorsAdmin.tsx";
+import PublishersAdmin from "./pages/PublishersAdmin.tsx";
+import CategoriesAdmin from "./pages/CategoriesAdmin.tsx";
+import UsersAdmin from "./pages/UsersAdmin.tsx";
+import NavbarAdmin from "./pages/NavbarAdmin.tsx";
 import BooksAdmin from "./pages/BooksAdmin.jsx";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext.tsx";
 import {ClipLoader} from "react-spinners";
 
 function Unauthorized() {

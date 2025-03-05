@@ -1,13 +1,13 @@
 import {useState} from "react";
-import {useBooks} from "../hooks/useBooks.jsx";
-import {useAuthors} from "../hooks/useAuthors.jsx";
-import {usePublishers} from "../hooks/usePublishers.jsx";
-import {useCategories} from "../hooks/useCategories.jsx";
+import {useBooks} from "../hooks/useBooks.ts";
+import {useAuthors} from "../hooks/useAuthors.ts";
+import {usePublishers} from "../hooks/usePublishers.ts";
+import {useCategories} from "../hooks/useCategories.ts";
 import LoadingSpinner from "./LoadingSpinner.jsx";
 
 const BooksAdmin = () => {
     const {books, error, loading, removeBook, createBook, addingBook} = useBooks();
-    const {authors} = useAuthors();
+    const {authors, createAuthor} = useAuthors();
     const {publishers} = usePublishers();
     const {categories} = useCategories();
 
@@ -15,10 +15,14 @@ const BooksAdmin = () => {
     const [selectedAuthors, setSelectedAuthors] = useState([]);
     const [selectedPublisher, setSelectedPublisher] = useState("");
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [newAuthors, setNewAuthors] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleAddBook = async (e) => {
         e.preventDefault();
+
+        // Verifica os dados antes de enviar
+        console.log("Enviando livro com autores:", newBookTitle, selectedAuthors, selectedPublisher, selectedCategories);
 
         await createBook(newBookTitle, selectedAuthors, selectedPublisher, selectedCategories);
 
@@ -75,7 +79,36 @@ const BooksAdmin = () => {
                                     required
                                 />
 
-                                {/* Dropdown de Autores (Múltiplos) */}
+                                {/*Input de novo autor*/}
+                                <input
+                                    type="text"
+                                    placeholder="Novo Autor"
+                                    value={newAuthors}
+                                    onChange={(e) => setNewAuthors(e.target.value)}
+                                    className="bg-gray-700 border border-gray-600 text-white rounded-lg p-2 mb-3 w-full"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={async () => {
+                                        if (newAuthors.trim()) {
+                                            const addedAuthor = await createAuthor(newAuthors);
+
+                                            if (addedAuthor && addedAuthor.id) {
+                                                setSelectedAuthors((prev) =>
+                                                    Array.isArray(prev) ? [...prev, addedAuthor.id] : [addedAuthor.id]
+                                                );
+                                            } else {
+                                                console.error("Erro ao criar autor:", addedAuthor);
+                                            }
+
+                                            setNewAuthors("");
+                                        }
+                                    }}
+                                    className="bg-green-500 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg w-full mb-3"
+                                >
+                                    Adicionar Autor
+                                </button>
+
                                 <select
                                     multiple
                                     value={selectedAuthors}

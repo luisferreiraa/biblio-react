@@ -1,13 +1,16 @@
-import {useState} from "react";
-import {useAuthors} from "../hooks/useAuthors.jsx";
+// src/pages/AuthorsAdmin.jsx
+
+import {useState, FormEvent} from "react";
+import {useAuthors} from "../hooks/useAuthors.ts";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import {Author} from "../interfaces/author.ts";
 
 const AuthorsAdmin = () => {
     const { authors, error, loading, removeAuthor, createAuthor, addingAuthor } = useAuthors();
-    const [newAuthorName, setNewAuthorName] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newAuthorName, setNewAuthorName] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const handleAddAuthor = async (e) => {
+    const handleAddAuthor = async (e: FormEvent) => {
         e.preventDefault();
         await createAuthor(newAuthorName);
         setNewAuthorName("");
@@ -15,7 +18,7 @@ const AuthorsAdmin = () => {
     };
 
     if (loading) {
-        return <LoadingSpinner />; // 👈 Usa o componente reutilizável
+        return <LoadingSpinner />;
     }
 
     if (error) return <p>Erro: {error}</p>;
@@ -78,7 +81,7 @@ const AuthorsAdmin = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {authors.map((author) => (
+                        {authors.map((author: Author) => (
                             <tr key={author.id} className="border-gray-700 hover:bg-gray-700">
                                 <td className="py-2 px-4">{author.name}</td>
                                 <td className="py-2 px-4">

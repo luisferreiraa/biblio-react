@@ -1,7 +1,15 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth} from "../context/AuthContext.jsx";
+// src/routes/PrivateRoute.jsx
 
-const PrivateRoute = ({ allowedRoles }) => {
+import { Navigate, Outlet } from 'react-router-dom'
+import { useAuth} from "../context/AuthContext.tsx";
+import React from "react";
+
+// Tipando as props do componente
+interface PrivateRouteProps {
+    allowedRoles: string[];
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles }) => {
     const { user, loading } = useAuth();
 
     // Se estiver carregando, não redirecionamos imediatamente

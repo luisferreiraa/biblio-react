@@ -1,6 +1,12 @@
-const API_URL = 'http://localhost:9090/api/users/';
+// src/api/publishers.ts
 
-export const fetchUsers = async () => {
+import {Publisher} from "../interfaces/publisher.ts";
+import {PublisherResponse} from "../interfaces/publisherResponse.ts";
+
+const API_URL = 'http://localhost:9090/api/publishers/';
+
+// Buscar lista de editoras
+export const fetchPublishers = async (): Promise<PublisherResponse | void> => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -21,20 +27,21 @@ export const fetchUsers = async () => {
             throw new Error(`Erro ${response.status}: ${response.statusText}`);
         }
 
-        return await response.json();
+        return await response.json() as PublisherResponse;
     } catch (error) {
-        console.error("Erro ao buscar utilizadores: ", error);
+        console.error("Erro ao buscar editoras: ", error);
         throw error;
     }
 };
 
-export const addUser = async (username, password, role) => {
+// Adicionar uma nova editora
+export const addPublisher = async (name: string): Promise<Publisher> => {
 
     const token = localStorage.getItem('token');
 
     if (!token) {
-        console.error("Token não encontrado. Faça login novamente.")
-        return;
+        console.error("Token não encontrado. Faça login novamente.");
+        throw new Error("Token não encontrado.");
     }
 
     const response = await fetch(API_URL, {
@@ -43,25 +50,27 @@ export const addUser = async (username, password, role) => {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ username: username, password: password, role: role }),
+        body: JSON.stringify({ name: name }),
     });
 
     if (!response.ok) {
         throw new Error(`Erro ${response.status}: ${response.statusText}`);
     }
 
-    return await response.json();
+    return await response.json() as Publisher;
 };
 
-export const deleteUser = async (userId) => {
+// Remover uma editora
+export const deletePublisher = async (publisherId: number): Promise<boolean> => {
     const token = localStorage.getItem('token');
+
     if (!token) {
         console.error("Token não encontrado. Faça login novamente.")
-        return;
+        throw new Error("Token não encontrado.");
     }
 
     try {
-        const response = await fetch(`${API_URL}${userId}`, {
+        const response = await fetch(`${API_URL}${publisherId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -74,7 +83,7 @@ export const deleteUser = async (userId) => {
 
         return true;
     } catch (error) {
-        console.error("Erro ao buscar utilizadores: ", error);
+        console.error("Erro ao buscar editoras: ", error);
         throw error;
     }
 };

@@ -1,13 +1,14 @@
-import {useState} from "react";
-import {usePublishers} from "../hooks/usePublishers.jsx";
+import {FormEvent, useState} from "react";
+import {usePublishers} from "../hooks/usePublishers.ts";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import {Publisher} from "../interfaces/publisher.ts";
 
 const PublishersAdmin = () => {
     const {publishers, error, loading, removePublisher, createPublisher, addingPublisher} = usePublishers();
-    const [newPublisherName, setNewPublisherName] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newPublisherName, setNewPublisherName] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const handleAddPublisher = async (e) => {
+    const handleAddPublisher = async (e: FormEvent) => {
         e.preventDefault();
         await createPublisher(newPublisherName);
         setNewPublisherName("");
@@ -98,7 +99,7 @@ const PublishersAdmin = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {publishers.map((publisher) => (
+                        {publishers.map((publisher: Publisher) => (
                             <tr key={publisher.id} className="border-gray-700 hover:bg-gray-700">
                                 <td className="py-2 px-4">{publisher.name}</td>
                                 <td className="py-2 px-4">

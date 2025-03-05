@@ -1,6 +1,12 @@
-const API_URL = 'http://localhost:9090/api/publishers/';
+// src/api/category.ts
 
-export const fetchPublishers = async () => {
+import {Category} from "../interfaces/category.ts";
+import {CategoryResponse} from "../interfaces/categoryResponse.ts";
+
+const API_URL = 'http://localhost:9090/api/categories/';
+
+// Buscar lista de categorias
+export const fetchCategories = async (): Promise<CategoryResponse | void> => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -21,20 +27,21 @@ export const fetchPublishers = async () => {
             throw new Error(`Erro ${response.status}: ${response.statusText}`);
         }
 
-        return await response.json();
+        return await response.json() as CategoryResponse;
     } catch (error) {
-        console.error("Erro ao buscar editoras: ", error);
+        console.error("Erro ao buscar categorias: ", error);
         throw error;
     }
 };
 
-export const addPublisher = async (name) => {
+// Adicionar uma nova categoria
+export const addCategory = async (name: string): Promise<Category> => {
     const token = localStorage.getItem('token');
+
     if (!token) {
         console.error("Token não encontrado. Faça login novamente.");
-        return;
+        throw new Error("Token não encontrado.")
     }
-
     const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -44,18 +51,23 @@ export const addPublisher = async (name) => {
         body: JSON.stringify({ name: name }),
     });
 
-    return await response.json();
+    if (!response.ok) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json() as Category;
 };
 
-export const deletePublisher = async (publisherId) => {
+// Remover uma categoria
+export const deleteCategory = async (categoryId: number): Promise<boolean> => {
     const token = localStorage.getItem('token');
     if (!token) {
-        console.error("Token não encontrado. Faça login novamente.")
-        return;
+        console.error("Token não encontrado. Faça login novamente.");
+        throw new Error("Token não encontrado.");
     }
 
     try {
-        const response = await fetch(`${API_URL}${publisherId}`, {
+        const response = await fetch(`${API_URL}${categoryId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -68,7 +80,7 @@ export const deletePublisher = async (publisherId) => {
 
         return true;
     } catch (error) {
-        console.error("Erro ao buscar editoras: ", error);
+        console.error("Erro ao buscar categorias: ", error);
         throw error;
     }
 };
