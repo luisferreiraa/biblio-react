@@ -12,6 +12,8 @@ import NavbarAdmin from "./pages/NavbarAdmin.tsx";
 import BooksAdmin from "./pages/BooksAdmin.jsx";
 import { useAuth } from "./context/AuthContext.tsx";
 import {ClipLoader} from "react-spinners";
+import BookAdmin from "./pages/BookAdmin.tsx";
+import AuthorAdmin from "./pages/AuthorAdmin.tsx";
 
 function Unauthorized() {
     return <h1>Acesso não autorizado</h1>;
@@ -47,7 +49,9 @@ function App() {
                     <Route path="/admin" element={<AdminPanel />} />
                     <Route path="/users" element={<UsersAdmin />} />
                     <Route path="/books" element={<BooksAdmin />} />
+                    <Route path="/books/:id" element={<BookAdmin />} />
                     <Route path="/authors" element={<AuthorsAdmin />} />
+                    <Route path="/authors/:id" element={<AuthorAdmin />} />
                     <Route path="/publishers" element={<PublishersAdmin />} />
                     <Route path="/categories" element={<CategoriesAdmin />} />
                 </Route>

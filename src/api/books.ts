@@ -1,35 +1,27 @@
 // scr/api/books.ts
-
 import {Book} from "../interfaces/book.ts";
 import {BookResponse} from "../interfaces/bookResponse.ts";
-
-const API_URL = "http://localhost:9090/api/books/";
+import axiosInstance from "./axiosInstance.ts";
+import {BookByIdResponse} from "../interfaces/bookByIdResponse.ts";
 
 // Buscar lista de livros
 export const fetchBooks = async (): Promise<BookResponse> => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        console.error("Token não encontrado. Faça login novamente.")
-        return;
-    }
-
     try {
-        const response = await fetch(API_URL, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
-        }
-
-        return await response.json() as BookResponse;
-    } catch (error) {
+        const { data } = await axiosInstance.get<BookResponse>("books/");
+        return data;
+    } catch(error) {
         console.error("Erro ao buscar livros: ", error);
+        throw error;
+    }
+};
+
+// Buscar um livro pelo id
+export const fetchBookById = async (bookId: number): Promise<BookByIdResponse> => {
+    try {
+        const { data } = await axiosInstance.get<BookByIdResponse>(`books/${bookId}`);
+        return data;
+    } catch (error) {
+        console.error("Erro ao buscar livro: ", error);
         throw error;
     }
 };
@@ -39,59 +31,24 @@ export const addBook = async (
     title: string,
     authorsId: number[],
     publisherId: number,
-    categoriesId: number[]
+    categoriesId: number[],
 ): Promise<Book> => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        console.error("Token não encontrado. Faça login novamente.");
+    try {
+        const { data } = await axiosInstance.post<Book>("books/", { title, authorsId, publisherId, categoriesId });
+        return data;
+    } catch (error) {
+        console.error("Erro ao adicionar novo livro: ", error);
+        throw error;
     }
-
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(
-            {
-                title: title,
-                authorsId: authorsId,
-                publisherId: publisherId,
-                categoriesId: categoriesId
-            }),
-    });
-
-    if (!response.ok) {
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
-    }
-
-    return await response.json() as Book;
 };
 
 // Remover um livro
 export const deleteBook = async (bookId: number): Promise<boolean> => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        throw new Error("Token não encontrado. Faça login novamente.");
-    }
-
     try {
-        const response = await fetch(`${API_URL}${bookId}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
-        }
-
+        await axiosInstance.delete(`books/${bookId}`);
         return true;
     } catch (error) {
-        console.error("Erro ao buscar livros: ", error);
+        console.error("Erro ao remover livro: ", error);
         throw error;
     }
 };

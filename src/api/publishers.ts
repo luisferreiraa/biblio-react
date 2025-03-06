@@ -1,89 +1,37 @@
 // src/api/publishers.ts
-
 import {Publisher} from "../interfaces/publisher.ts";
 import {PublisherResponse} from "../interfaces/publisherResponse.ts";
-
-const API_URL = 'http://localhost:9090/api/publishers/';
+import axiosInstance from "./axiosInstance.ts";
 
 // Buscar lista de editoras
-export const fetchPublishers = async (): Promise<PublisherResponse | void> => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        console.error("Token não encontrado. Faça login novamente.")
-        return;
-    }
-
+export const fetchPublishers = async (): Promise<PublisherResponse> => {
     try {
-        const response = await fetch(API_URL, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
-        }
-
-        return await response.json() as PublisherResponse;
+        const { data } = await axiosInstance.get<PublisherResponse>("publishers/");
+        return data;
     } catch (error) {
         console.error("Erro ao buscar editoras: ", error);
         throw error;
     }
-};
+} ;
 
 // Adicionar uma nova editora
 export const addPublisher = async (name: string): Promise<Publisher> => {
-
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        console.error("Token não encontrado. Faça login novamente.");
-        throw new Error("Token não encontrado.");
+    try {
+        const { data } = await axiosInstance.post<Publisher>("publishers/", { name });
+        return data;
+    } catch (error) {
+        console.error("Erro ao adicionar editora: ", error);
+        throw error;
     }
-
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name: name }),
-    });
-
-    if (!response.ok) {
-        throw new Error(`Erro ${response.status}: ${response.statusText}`);
-    }
-
-    return await response.json() as Publisher;
 };
 
 // Remover uma editora
 export const deletePublisher = async (publisherId: number): Promise<boolean> => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        console.error("Token não encontrado. Faça login novamente.")
-        throw new Error("Token não encontrado.");
-    }
-
     try {
-        const response = await fetch(`${API_URL}${publisherId}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
-        }
-
+        await axiosInstance.delete(`publishers/${publisherId}`);
         return true;
     } catch (error) {
-        console.error("Erro ao buscar editoras: ", error);
+        console.error("Erro ao remover editora: ", error);
         throw error;
     }
 };

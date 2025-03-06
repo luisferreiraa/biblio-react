@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { fetchBooks, addBook, deleteBook } from "../api/books.ts";
+import {fetchBooks, addBook, deleteBook, fetchBookById} from "../api/books.ts";
 import { useAuth } from "../context/AuthContext.tsx";
 import {Book} from "../interfaces/book.ts";
+import {BookByIdResponse} from "../interfaces/bookByIdResponse.ts";
 
 export const useBooks = () => {
     const { user } = useAuth();
     const [books, setBooks] = useState<Book[]>([]);
+    const [book, setBook] = useState<BookByIdResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [addingBook, setAddingBook] = useState<boolean>(false);
@@ -28,10 +30,28 @@ export const useBooks = () => {
             setLoading(true);
             const data = await fetchBooks();
 
-            // Verifica se há autores retornados
+            // Verifica se há livros retornados
             if (data) {
                 setBooks(data.content);
             }
+        } catch (err) {
+            setError((err as Error).message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Função para carregar um livro específico
+    const loadBook = async (bookId: number) => {
+        if (!user?.token) return;
+
+        setLoading(true);
+        setError(null);
+        setBook(null); // Evita exibição de dados antigos enquanto carrega um novo
+
+        try {
+            const data = await fetchBookById(bookId);
+            setBook(data);
         } catch (err) {
             setError((err as Error).message);
         } finally {
@@ -97,5 +117,5 @@ export const useBooks = () => {
         }
     };
 
-    return { books, error, loading, addingBook, createBook, reload: loadBooks, removeBook };
+    return { books, book, error, loading, addingBook, createBook, reload: loadBooks, loadBook, removeBook };
 }

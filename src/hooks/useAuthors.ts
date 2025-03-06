@@ -1,13 +1,15 @@
 // src/hooks/useAuthors.ts
 
 import {useState, useEffect} from "react";
-import {fetchAuthors, addAuthor, deleteAuthor} from "../api/authors.ts";
+import {fetchAuthors, addAuthor, deleteAuthor, fetchAuthorById} from "../api/authors.ts";
 import {useAuth} from "../context/AuthContext.tsx";
 import {Author} from "../interfaces/author.ts";
+import {AuthorByIdResponse} from "../interfaces/authorByIdResponse.ts";
 
 export const useAuthors = () => {
     const {user} = useAuth();
     const [authors, setAuthors] = useState<Author[]>([]);
+    const [author, setAuthor] = useState<AuthorByIdResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [addingAuthor, setAddingAuthor] = useState<boolean>(false);
@@ -34,6 +36,24 @@ export const useAuthors = () => {
             if (data) {
                 setAuthors(data.content);
             }
+        } catch (err) {
+            setError((err as Error).message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Função para carregar um autor específico
+    const loadAuthor = async (authorId: number) => {
+        if (!user?.token) return;
+
+        setLoading(true);
+        setError(null);
+        setAuthor(null);
+
+        try {
+            const data = await fetchAuthorById(authorId);
+            setAuthor(data);
         } catch (err) {
             setError((err as Error).message);
         } finally {
@@ -84,5 +104,5 @@ export const useAuthors = () => {
         }
     };
 
-    return {authors, error, loading, removeAuthor, createAuthor, addingAuthor, reload: loadAuthors};
+    return {authors, author, error, loading, removeAuthor, createAuthor, addingAuthor, reload: loadAuthors, loadAuthor};
 }

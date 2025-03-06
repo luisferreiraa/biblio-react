@@ -4,6 +4,7 @@ import {useState, FormEvent} from "react";
 import {useAuthors} from "../hooks/useAuthors.ts";
 import LoadingSpinner from "./LoadingSpinner.jsx";
 import {Author} from "../interfaces/author.ts";
+import {Link} from "react-router-dom";
 
 const AuthorsAdmin = () => {
     const { authors, error, loading, removeAuthor, createAuthor, addingAuthor } = useAuthors();
@@ -83,7 +84,11 @@ const AuthorsAdmin = () => {
                         <tbody>
                         {authors.map((author: Author) => (
                             <tr key={author.id} className="border-gray-700 hover:bg-gray-700">
-                                <td className="py-2 px-4">{author.name}</td>
+                                <td className="py-2 px-4">
+                                    <Link to={`/authors/${author.id}`} className="text-blue-400 hover:underline">
+                                        {author.name}
+                                    </Link>
+                                </td>
                                 <td className="py-2 px-4">
                                     <button
                                         onClick={() => removeAuthor(author.id)}

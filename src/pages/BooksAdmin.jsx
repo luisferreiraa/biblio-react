@@ -4,6 +4,7 @@ import {useAuthors} from "../hooks/useAuthors.ts";
 import {usePublishers} from "../hooks/usePublishers.ts";
 import {useCategories} from "../hooks/useCategories.ts";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import {Link} from "react-router-dom";
 
 const BooksAdmin = () => {
     const {books, error, loading, removeBook, createBook, addingBook} = useBooks();
@@ -182,7 +183,11 @@ const BooksAdmin = () => {
                         <tbody>
                         {books.map((book) => (
                             <tr key={book.id} className="border-gray-700 hover:bg-gray-700">
-                                <td className="py-2 px-4">{book.title}</td>
+                                <td className="py-2 px-4">
+                                    <Link to={`/books/${book.id}`} className="text-blue-400 hover:underline">
+                                    {book.title}
+                                    </Link>
+                                    </td>
                                 <td className="py-2 px-4">
                                     <button
                                         onClick={() => removeBook(book.id)}
@@ -203,3 +208,4 @@ const BooksAdmin = () => {
 };
 
 export default BooksAdmin;
+
