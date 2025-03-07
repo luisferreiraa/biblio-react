@@ -31,7 +31,9 @@ const UsersAdmin: React.FC = () => {
     if (error) return <p>Erro: {error}</p>;
 
     return (
-        <div className="bg-gray-900 text-white">
+        <div className="bg-white text-white"
+             style={{fontFamily: "'Poppins', sans-serif"}}
+        >
             <div className="p-6 flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                 <h2 className="text-xl font-bold">Lista de Utilizadores</h2>
 

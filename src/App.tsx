@@ -14,6 +14,7 @@ import { useAuth } from "./context/AuthContext.tsx";
 import {ClipLoader} from "react-spinners";
 import BookAdmin from "./pages/BookAdmin.tsx";
 import AuthorAdmin from "./pages/AuthorAdmin.tsx";
+import PublisherAdmin from "./pages/PublisherAdmin.tsx";
 
 function Unauthorized() {
     return <h1>Acesso não autorizado</h1>;
@@ -53,6 +54,7 @@ function App() {
                     <Route path="/authors" element={<AuthorsAdmin />} />
                     <Route path="/authors/:id" element={<AuthorAdmin />} />
                     <Route path="/publishers" element={<PublishersAdmin />} />
+                    <Route path="/publishers/:id" element={<PublisherAdmin />} />
                     <Route path="/categories" element={<CategoriesAdmin />} />
                 </Route>
 

@@ -1,13 +1,16 @@
 // src/hooks/usePublishers.ts
 
-import { useState, useEffect } from 'react';
-import { fetchPublishers, addPublisher, deletePublisher } from "../api/publishers.ts";
-import { useAuth } from "../context/AuthContext.tsx";
+import {useState, useEffect} from 'react';
+import {fetchPublishers, addPublisher, deletePublisher, fetchPublisherById} from "../api/publishers.ts";
+import {useAuth} from "../context/AuthContext.tsx";
 import {Publisher} from "../interfaces/publisher.ts";
+import {PublisherById} from "../interfaces/publisherById.ts";
+import {fetchBookById} from "../api/books.ts";
 
 export const usePublishers = () => {
-    const { user } = useAuth();
+    const {user} = useAuth();
     const [publishers, setPublishers] = useState<Publisher[]>([]);
+    const [publisher, setPublisher] = useState<PublisherById | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [addingPublisher, setAddingPublisher] = useState<boolean>(false);
@@ -40,6 +43,25 @@ export const usePublishers = () => {
             setLoading(false);
         }
     };
+
+    // Função para carregar uma editora em específico
+    const loadPublisher = async (publisherId: number) => {
+        if (!user?.token) return;
+
+        setLoading(true);
+        setError(null);
+        setPublisher(null);
+
+        try {
+            const data = await fetchPublisherById(publisherId);
+            setPublisher(data);
+        } catch (err) {
+            setError((err as Error).message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     // Função para remover uma editora
     const removePublisher = async (publisherId: number) => {
@@ -84,6 +106,6 @@ export const usePublishers = () => {
         }
     };
 
-    return { publishers, error, loading, addingPublisher, reload: loadPublishers, removePublisher, createPublisher };
+    return {publishers, publisher, error, loading, addingPublisher, reload: loadPublishers, loadPublisher, removePublisher, createPublisher};
 
 }

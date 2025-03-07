@@ -2,6 +2,7 @@
 import {Publisher} from "../interfaces/publisher.ts";
 import {PublisherResponse} from "../interfaces/publisherResponse.ts";
 import axiosInstance from "./axiosInstance.ts";
+import {PublisherById} from "../interfaces/publisherById.ts";
 
 // Buscar lista de editoras
 export const fetchPublishers = async (): Promise<PublisherResponse> => {
@@ -12,7 +13,19 @@ export const fetchPublishers = async (): Promise<PublisherResponse> => {
         console.error("Erro ao buscar editoras: ", error);
         throw error;
     }
-} ;
+};
+
+// Buscar editora pelo id
+export const fetchPublisherById = async (publisherId: number): Promise<PublisherById> => {
+    try {
+        const { data } = await axiosInstance.get<PublisherById>(`publishers/${publisherId}`);
+        return data;
+    } catch (error) {
+        console.error("Erro ao buscar editora: ", error);
+        throw error;
+    }
+};
+
 
 // Adicionar uma nova editora
 export const addPublisher = async (name: string): Promise<Publisher> => {

@@ -12,7 +12,7 @@ const AdminPanel: React.FC = () => {
     };
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
+        <div className="bg-white text-gray-600 min-h-screen flex flex-col items-center justify-center">
             <h1 className="text-xl font-bold">Painel de Administração</h1>
             <p>Olá, {user?.username ?? "Convidado"}</p>
 
@@ -24,13 +24,6 @@ const AdminPanel: React.FC = () => {
             >
                 Logout
             </button>
-
-            <div className="grid grid-cols-2 gap-4 mt-5">
-                <button onClick={() => navigate("/users")} className="bg-blue-500 hover:bg-blue-700 ...">Utilizadores</button>
-                <button onClick={() => navigate("/authors")} className="bg-blue-500 hover:bg-blue-700 ...">Autores</button>
-                <button onClick={() => navigate("/publishers")} className="bg-blue-500 hover:bg-blue-700 ...">Editoras</button>
-                <button onClick={() => navigate("/categories")} className="bg-blue-500 hover:bg-blue-700 ...">Categorias</button>
-            </div>
         </div>
     );
 };
